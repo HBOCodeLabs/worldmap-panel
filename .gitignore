@@ -11,6 +11,3 @@ artifacts/
 .venv*
 bin/
 build/
-
-package-lock.json
-yarn.lock
