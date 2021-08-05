@@ -1,7 +1,7 @@
 {
-  "name": "worldmap-panel",
-  "version": "1.0.1",
-  "description": "Worldmap Panel Plugin for Grafana",
+  "name": "advanced-wordmap-panel",
+  "version": "1.0",
+  "description": "Advanced Worldmap Panel Plugin for Grafana",
   "main": "src/module.js",
   "scripts": {
     "build": "node --max-old-space-size=8192 ./node_modules/.bin/webpack --config webpack.config.prod.js",
@@ -10,12 +10,13 @@
     "test": "jest --config jest.config.js"
   },
   "keywords": [
+    "HBOMax",
     "worldmap",
     "grafana",
     "plugin",
     "panel"
   ],
-  "author": "Grafana Labs",
+  "author": "Providence Team",
   "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.1.6",

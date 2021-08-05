@@ -189,7 +189,32 @@
   </div>
 
   <div class="section gf-form-group">
-    <h5 class="section-heading">Threshold Options</h5>
+    <h5 class="section-heading">Drawing Options</h5>
+    <div class="gf-form">
+      <label class="gf-form-label width-10">Minimum threshold value </label>
+      <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.minThreshold" ng-change="ctrl.render()"
+        placeholder="10" ng-model-onblur />
+    </div>
+    <div class="gf-form">
+      <label class="gf-form-label width-10">Color property </label>
+      <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.colorMetric" ng-change="ctrl.render()"
+        placeholder="Percent Column" ng-model-onblur />
+    </div>
+    <div class="gf-form">
+      <label class="gf-form-label width-10">Color label </label>
+      <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.colorLabel" ng-change="ctrl.render()"
+        placeholder="Percent Column" ng-model-onblur />
+    </div>
+    <div class="gf-form">
+      <label class="gf-form-label width-10">Color unit </label>
+      <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.colorUnit" ng-change="ctrl.render()"
+        placeholder="%" ng-model-onblur />
+    </div>
+    <div class="gf-form">
+      <label class="gf-form-label width-10">Color value decimals </label>
+      <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.colorDecimals" ng-change="ctrl.render()"
+        placeholder="2" ng-model-onblur />
+    </div>
     <div class="gf-form">
       <label class="gf-form-label width-10">Thresholds</label>
       <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.thresholds" ng-change="ctrl.changeThresholds()"

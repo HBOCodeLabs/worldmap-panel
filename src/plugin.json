@@ -1,7 +1,7 @@
 {
   "type": "panel",
-  "name": "Worldmap Panel",
-  "id": "grafana-worldmap-panel",
+  "name": "Advanced Worldmap Panel",
+  "id": "advanced-wordmap-panel",
 
   "info": {
     "description": "World Map panel for Grafana. Displays time series data or geohash data from Elasticsearch overlaid on a world map.",
@@ -23,7 +23,7 @@
       {"name": "USA", "path": "images/worldmap-usa.png"},
       {"name": "Light Theme", "path": "images/worldmap-light-theme.png"}
     ],
-    "version": "1.0.1",
+    "version": "1.0",
     "updated": "Fri May 15 14:40:24 MDT 2020"
   },
 
