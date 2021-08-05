@@ -196,7 +196,9 @@ export default class WorldMap {
 
   createPopup(circle, locationName, value, colorValue) {
     const unit = value && value === 1 ? this.ctrl.panel.unitSingular : this.ctrl.panel.unitPlural;
-    const label = `${locationName}: ${value} ${(unit || '')}${(colorValue !== undefined ? ' <br> ' + (this.ctrl.panel.colorLabel || '') + (this.ctrl.panel.colorLabel !== undefined ? ': ' : '') +  colorValue + (this.ctrl.panel.colorUnit || '') : '')}`.trim()
+    const firstLine = `${locationName}: ${value} ${(unit || '')}`.trim();
+    const secondLine = colorValue !== undefined ? `${(this.ctrl.panel.colorLabel !== undefined ? this.ctrl.panel.colorLabel + ': ':'') + colorValue + (this.ctrl.panel.colorUnit || '')}`.trim(): '';
+    const label = `${firstLine}${secondLine !== '' ? '<br>' + secondLine : ''}`;
     circle.bindPopup(label, {
       offset: (<any>window).L.point(0, -2),
       className: 'worldmap-popup',
