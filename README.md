@@ -1,6 +1,11 @@
 
+# Pipeline (Github Action)
 [![CI](https://github.com/HBOCodeLabs/worldmap-panel/actions/workflows/Release.yml/badge.svg)](https://github.com/HBOCodeLabs/worldmap-panel/actions/workflows/Release.yml)
-
+If PUSH or PR to master the following steps will run:
+- yarn install
+- yarn build
+- yarn test
+- Create github pre-release
 # Worldmap Panel Plugin for Grafana
 
 The Worldmap Panel is a tile map of the world that can be overlaid with circles representing data points from a query. It can be used with time series metrics, with geohash data from Elasticsearch or data in the Table format.
