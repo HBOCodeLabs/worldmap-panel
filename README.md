@@ -1,3 +1,11 @@
+
+# Pipeline (Github Action)
+[![CI](https://github.com/HBOCodeLabs/worldmap-panel/actions/workflows/Release.yml/badge.svg)](https://github.com/HBOCodeLabs/worldmap-panel/actions/workflows/Release.yml)
+If PUSH or PR to master the following steps will run:
+- yarn install
+- yarn build
+- yarn test
+- Create github pre-release
 # Worldmap Panel Plugin for Grafana
 
 The Worldmap Panel is a tile map of the world that can be overlaid with circles representing data points from a query. It can be used with time series metrics, with geohash data from Elasticsearch or data in the Table format.
@@ -276,6 +284,14 @@ Thresholds control the color of the circles.
 If one value is specified then two colors are used. For example, if the threshold is set to 10 then values under 10 get the first color and values that are 10 or more get the second color.
 
 The threshold field also accepts 2 or more comma-separated values. For example, if you have 2 values that represents 3 ranges that correspond to the three colors. For example: if the thresholds are 70, 90 then the first color represents < 70, the second color represents between 70 and 90 and the third color represents > 90.
+
+### Makefile 
+
+Added a Makefile. Available commands are:
+```
+make build
+```
+This command will cleanup the dist folder, the dependencies and run the ```npm build``` command.
 
 ### CHANGELOG
 
