@@ -1,5 +1,5 @@
 {
-  "name": "advanced-wordmap-panel",
+  "name": "advanced-worldmap-panel",
   "version": "1.0",
   "description": "Advanced Worldmap Panel Plugin for Grafana",
   "main": "src/module.js",

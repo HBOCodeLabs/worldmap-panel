@@ -16,7 +16,7 @@ const panelDefaults = {
   mapCenterLongitude: 0,
   initialZoom: 1,
   valueName: "total",
-  minThreshold: 0,
+  minValue: 0,
   colorMetric:"",
   colorLabel: "",
   colorUnit:"%",
@@ -34,6 +34,7 @@ const panelDefaults = {
   unitPlural: "",
   showLegend: true,
   mouseWheelZoom: false,
+  hideLocationName: false,
   esMetric: "Count",
   decimals: 0,
   hideEmpty: false,
@@ -143,7 +144,7 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
       this.panel.locationData !== "json result"
     ) {
       $.getJSON(
-        "public/plugins/advanced-wordmap-panel/data/" +
+        "public/plugins/advanced-worldmap-panel/data/" +
           this.panel.locationData +
           ".json"
       ).then(this.reloadLocations.bind(this));
@@ -178,7 +179,7 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
   onInitEditMode() {
     this.addEditorTab(
       "Worldmap",
-      "public/plugins/advanced-wordmap-panel/partials/editor.html",
+      "public/plugins/advanced-worldmap-panel/partials/editor.html",
       2
     );
   }
