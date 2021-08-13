@@ -105,7 +105,7 @@ export default class WorldMap {
     return _.filter(data, o => {
       return !(this.ctrl.panel.hideEmpty && _.isNil(o.value)) 
           && !(this.ctrl.panel.hideZero && o.value === 0)
-          && !(this.ctrl.panel.minThreshold && o.value <= this.ctrl.panel.minThreshold)
+          && !(this.ctrl.panel.minValue !== undefined && o.value <= this.ctrl.panel.minValue)
     });
   }
 
@@ -196,8 +196,8 @@ export default class WorldMap {
 
   createPopup(circle, locationName, value, colorValue) {
     const unit = value && value === 1 ? this.ctrl.panel.unitSingular : this.ctrl.panel.unitPlural;
-    const firstLine = `${locationName}: ${value} ${(unit || '')}`.trim();
-    const secondLine = colorValue !== undefined ? `${(this.ctrl.panel.colorLabel !== undefined ? this.ctrl.panel.colorLabel + ': ':'') + colorValue + (this.ctrl.panel.colorUnit || '')}`.trim(): '';
+    const firstLine = `${this.ctrl.panel.hideLocationName ? "" : locationName + ": "}`+`${value} ${(unit || '')}`.trim();
+    const secondLine = colorValue !== undefined ? `${(this.ctrl.panel.colorLabel !== undefined ? this.ctrl.panel.colorLabel + ': ':'') + (colorValue || '0')  + (this.ctrl.panel.colorUnit || '')}`.trim(): '';
     const label = `${firstLine}${secondLine !== '' ? '<br>' + secondLine : ''}`;
     circle.bindPopup(label, {
       offset: (<any>window).L.point(0, -2),

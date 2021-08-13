@@ -171,6 +171,7 @@
       <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.tableQueryOptions.longitudeField" ng-change="ctrl.refresh()"
         ng-model-onblur />
     </div>
+    <gf-form-switch class="gf-form" ng-show="ctrl.panel.locationData === 'geohash'" label="Hide Location Name" label-class="width-10" checked="ctrl.panel.hideLocationName" ng-model="ctrl.panel.hideLocationName" on-change="ctrl.render()"></gf-form-switch>
     <div class="gf-form" ng-show="ctrl.panel.locationData === 'geohash'">
       <label class="gf-form-label width-12">Location Name Field</label>
       <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.esLocationName" ng-change="ctrl.refresh()"
@@ -189,16 +190,11 @@
   </div>
 
   <div class="section gf-form-group">
-    <h5 class="section-heading">Drawing Options</h5>
-    <div class="gf-form">
-      <label class="gf-form-label width-10">Minimum threshold value </label>
-      <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.minThreshold" ng-change="ctrl.render()"
-        placeholder="10" ng-model-onblur />
-    </div>
+    <h5 class="section-heading">Coloring Options</h5>
     <div class="gf-form">
       <label class="gf-form-label width-10">Color property </label>
       <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.colorMetric" ng-change="ctrl.render()"
-        placeholder="Percent Column" ng-model-onblur />
+        placeholder="Bucket Script" ng-model-onblur />
     </div>
     <div class="gf-form">
       <label class="gf-form-label width-10">Color label </label>
@@ -229,6 +225,11 @@
 
   <div class="section gf-form-group">
     <h5 class="section-heading">Hide series</h5>
+    <div class="gf-form">
+      <label class="gf-form-label width-10">With values under </label>
+      <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.minValue" ng-change="ctrl.render()"
+        placeholder="10" ng-model-onblur />
+    </div>
     <gf-form-switch class="gf-form" label="With only nulls" label-class="width-10" checked="ctrl.panel.hideEmpty" on-change="ctrl.render()">
     </gf-form-switch>
     <gf-form-switch class="gf-form" label="With only zeros" label-class="width-10" checked="ctrl.panel.hideZero" on-change="ctrl.render()">
