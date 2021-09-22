@@ -26,6 +26,9 @@ export default class WorldMap {
   map: any;
   legend: any;
   circlesLayer: any;
+  highestValue: number = 0;
+  lowestValue: number = Number.MAX_VALUE;
+  valueRange: number;
 
   constructor(ctrl, mapContainer) {
     this.ctrl = ctrl;
@@ -101,11 +104,20 @@ export default class WorldMap {
     return !_.isEqual(locations, dataPoints);
   }
 
+  // Determines if the log scale is applied and chooses which value to use
+  // Used when calculating circle sizes
+  getValue(dataPoint) {
+    return parseInt(this.ctrl.panel.isLogScale ? Math[this.ctrl.panel.logFunction](dataPoint.value) : dataPoint.value)
+  }
+
   filterEmptyAndZeroValues(data) {
+    const minValue = this.ctrl.panel.minValue;
+    const maxValue = this.ctrl.panel.maxValue;
     return _.filter(data, o => {
       return !(this.ctrl.panel.hideEmpty && _.isNil(o.value)) 
           && !(this.ctrl.panel.hideZero && o.value === 0)
-          && !(this.ctrl.panel.minValue !== undefined && o.value <= this.ctrl.panel.minValue)
+          && ([undefined, ''].includes(minValue) || o.value >= minValue)
+          && ([undefined, ''].includes(maxValue) || o.value <= maxValue)
     });
   }
 
@@ -129,6 +141,10 @@ export default class WorldMap {
 
   createCircles(data) {
     const circles: any[] = [];
+    const sizes = this.ctrl.data.map(x => this.getValue(x));
+    this.lowestValue = Math.min(...sizes);
+    this.highestValue = Math.max(...sizes);
+    this.valueRange = this.highestValue - this.lowestValue;
     data.forEach(dataPoint => {
       if (!dataPoint.locationName) {
         return;
@@ -140,6 +156,10 @@ export default class WorldMap {
   }
 
   updateCircles(data) {
+    const sizes = data.map(x => this.getValue(x));
+    this.lowestValue = Math.min(...sizes);
+    this.highestValue = Math.max(...sizes);
+    this.valueRange = this.highestValue - this.lowestValue;
     data.forEach(dataPoint => {
       if (!dataPoint.locationName) {
         return;
@@ -152,7 +172,7 @@ export default class WorldMap {
       if (circle) {
         const colorValue = dataPoint.colorValue !== undefined ? dataPoint.colorValue : dataPoint.value;
         const color = this.getColor(colorValue);
-        circle.setRadius(this.calcCircleSize(dataPoint.value || 0));
+        circle.setRadius(this.calcCircleSize(this.getValue(dataPoint) || 0));
         circle.setStyle({
           color,
           fillColor: color,
@@ -169,7 +189,7 @@ export default class WorldMap {
     const colorValue = dataPoint.colorValue !== undefined ? dataPoint.colorValue : dataPoint.value;
     const color = this.getColor(colorValue);
     const circle = (<any>window).L.circleMarker([dataPoint.locationLatitude, dataPoint.locationLongitude], {
-      radius: this.calcCircleSize(dataPoint.value || 0),
+      radius: this.calcCircleSize(this.getValue(dataPoint) || 0),
       color,
       fillColor: color,
       fillOpacity: 0.5,
@@ -181,14 +201,14 @@ export default class WorldMap {
   }
 
   calcCircleSize(dataPointValue) {
-    const circleMinSize = parseInt(this.ctrl.panel.circleMinSize, 10) || 2;
+    let circleMinSize = parseInt(this.ctrl.panel.circleMinSize, 10) || 2;
     const circleMaxSize = parseInt(this.ctrl.panel.circleMaxSize, 10) || 30;
 
-    if (this.ctrl.data.valueRange === 0) {
+    if (this.valueRange === 0) {
       return circleMaxSize;
     }
 
-    const dataFactor = (dataPointValue - this.ctrl.data.lowestValue) / this.ctrl.data.valueRange;
+    let dataFactor = (dataPointValue - this.lowestValue) / this.valueRange;
     const circleSizeRange = circleMaxSize - circleMinSize;
 
     return circleSizeRange * dataFactor + circleMinSize;
