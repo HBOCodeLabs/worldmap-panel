@@ -7,9 +7,6 @@ export default class DataFormatter {
 
   setValues(data) {
     if (this.ctrl.series && this.ctrl.series.length > 0) {
-      let highestValue = 0;
-      let lowestValue = Number.MAX_VALUE;
-
       this.ctrl.series.forEach(serie => {
         const lastPoint = _.last(serie.datapoints);
         const lastValue = _.isArray(lastPoint) ? lastPoint[0] : null;
@@ -33,23 +30,10 @@ export default class DataFormatter {
             valueFormatted: lastValue,
             valueRounded: 0,
           };
-
-          if (dataValue.value > highestValue) {
-            highestValue = dataValue.value;
-          }
-
-          if (dataValue.value < lowestValue) {
-            lowestValue = dataValue.value;
-          }
-
           dataValue.valueRounded = kbn.roundValue(dataValue.value, parseInt(this.ctrl.panel.decimals, 10) || 0);
           data.push(dataValue);
         }
       });
-
-      data.highestValue = highestValue;
-      data.lowestValue = lowestValue;
-      data.valueRange = highestValue - lowestValue;
     }
   }
 
@@ -76,9 +60,6 @@ export default class DataFormatter {
     }
 
     if (dataList && dataList.length > 0) {
-      let highestValue = 0;
-      let lowestValue = Number.MAX_VALUE;
-
       dataList.forEach(result => {
         if (result.type === 'table') {
           const columnNames = {};
@@ -96,20 +77,8 @@ export default class DataFormatter {
             const value = row[columnNames[this.ctrl.panel.esMetric]];
             const colorValue = row[columnNames[this.ctrl.panel.colorMetric]];
             const dataValue = this.createDataValue(encodedGeohash, decodedGeohash, locationName, value, colorValue);
-            if (dataValue.value > highestValue) {
-              highestValue = dataValue.value;
-            }
-
-            if (dataValue.value < lowestValue) {
-              lowestValue = dataValue.value;
-            }
-
             data.push(dataValue);
           });
-
-          data.highestValue = highestValue;
-          data.lowestValue = lowestValue;
-          data.valueRange = highestValue - lowestValue;
         } else {
           result.datapoints.forEach(datapoint => {
             const encodedGeohash = datapoint[this.ctrl.panel.esGeoPoint];
@@ -120,18 +89,8 @@ export default class DataFormatter {
             const value = datapoint[this.ctrl.panel.esMetric];
             const colorValue = datapoint[this.ctrl.panel.colorMetric];
             const dataValue = this.createDataValue(encodedGeohash, decodedGeohash, locationName, value, colorValue);
-            if (dataValue.value > highestValue) {
-              highestValue = dataValue.value;
-            }
-            if (dataValue.value < lowestValue) {
-              lowestValue = dataValue.value;
-            }
             data.push(dataValue);
           });
-
-          data.highestValue = highestValue;
-          data.lowestValue = lowestValue;
-          data.valueRange = highestValue - lowestValue;
         }
       });
     }
@@ -164,9 +123,6 @@ export default class DataFormatter {
 
   setTableValues(tableData, data) {
     if (tableData && tableData.length > 0) {
-      let highestValue = 0;
-      let lowestValue = Number.MAX_VALUE;
-
       tableData[0].forEach(datapoint => {
         let key;
         let longitude;
@@ -194,30 +150,14 @@ export default class DataFormatter {
           valueFormatted: datapoint[this.ctrl.panel.tableQueryOptions.metricField],
           valueRounded: 0,
         };
-
-        if (dataValue.value > highestValue) {
-          highestValue = dataValue.value;
-        }
-
-        if (dataValue.value < lowestValue) {
-          lowestValue = dataValue.value;
-        }
-
         dataValue.valueRounded = kbn.roundValue(dataValue.value, this.ctrl.panel.decimals || 0);
         data.push(dataValue);
       });
-
-      data.highestValue = highestValue;
-      data.lowestValue = lowestValue;
-      data.valueRange = highestValue - lowestValue;
     }
   }
 
   setJsonValues(data) {
     if (this.ctrl.series && this.ctrl.series.length > 0) {
-      let highestValue = 0;
-      let lowestValue = Number.MAX_VALUE;
-
       this.ctrl.series.forEach(point => {
         const dataValue = {
           key: point.key,
@@ -227,18 +167,9 @@ export default class DataFormatter {
           value: point.value !== undefined ? point.value : 1,
           valueRounded: 0,
         };
-        if (dataValue.value > highestValue) {
-          highestValue = dataValue.value;
-        }
-        if (dataValue.value < lowestValue) {
-          lowestValue = dataValue.value;
-        }
         dataValue.valueRounded = Math.round(dataValue.value);
         data.push(dataValue);
       });
-      data.highestValue = highestValue;
-      data.lowestValue = lowestValue;
-      data.valueRange = highestValue - lowestValue;
     }
   }
 }
