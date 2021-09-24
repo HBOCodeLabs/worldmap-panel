@@ -379,20 +379,24 @@ describe('Worldmap', () => {
 
   describe('when apply log is set', () => {
     const LOW = 1;
-    const HIGH = 3000;
-    const AVG = (HIGH + LOW)/2;
+    const HIGH = 300000;
+    const MID = 100;
+
+    const minCircleSize = 1;
+    const maxCircleSize = 11;
+    const midCircleSize = 4.651553264913736;
+    
 
     beforeEach(() => {
       ctrl.data = new DataBuilder()
         .withCountryAndValue('SE', LOW)
-        .withCountryAndValue('IE', AVG)
+        .withCountryAndValue('IE', MID)
         .withCountryAndValue('US', HIGH)
         .withThresholdValues([2])
         .build();
-      ctrl.panel.circleMinSize = '2';
-      ctrl.panel.circleMaxSize = '10';
+      ctrl.panel.circleMinSize = minCircleSize;
+      ctrl.panel.circleMaxSize = maxCircleSize;
       ctrl.panel.isLogScale = true;
-      ctrl.panel.logFunction = 'log1p';
       worldMap.drawCircles();
     });
 
@@ -401,20 +405,21 @@ describe('Worldmap', () => {
     });
 
     it('should create a circle with min circle size for smallest value size', () => {
-      expect(worldMap.circles[0].options.radius).toBe(2);
+      expect(worldMap.circles[0].options.radius).toBe(minCircleSize);
     });
 
-    it('should create a circle with circle size 9 for mid value size', () => {
-      expect(worldMap.circles[1].options.radius).toBe(9);
+    // log is used to highlight the smaller parts when there's a big deviant
+    it('should create a circle with intermediary circle size for mid value size', () => {
+      expect(worldMap.circles[1].options.radius).toBe(midCircleSize);
     });
 
     it('should create a circle with max circle size for largest value size', () => {
-      expect(worldMap.circles[2].options.radius).toBe(10);
+      expect(worldMap.circles[2].options.radius).toBe(maxCircleSize);
     });
 
     it('should create circle popups with the second metrics there', () => {
       expect(worldMap.circles[0]._popup._content).toBe(`Sweden: ${LOW}`);
-      expect(worldMap.circles[1]._popup._content).toBe(`Ireland: ${AVG}`);
+      expect(worldMap.circles[1]._popup._content).toBe(`Ireland: ${MID}`);
       expect(worldMap.circles[2]._popup._content).toBe(`United States: ${HIGH}`);
     });
   });

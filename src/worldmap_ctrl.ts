@@ -37,7 +37,6 @@ const panelDefaults = {
   mouseWheelZoom: false,
   hideLocationName: false,
   isLogScale: false,
-  logFunction: 'log10',
   esMetric: "Count",
   decimals: 0,
   hideEmpty: false,

@@ -107,7 +107,18 @@ export default class WorldMap {
   // Determines if the log scale is applied and chooses which value to use
   // Used when calculating circle sizes
   getValue(dataPoint) {
-    return parseInt(this.ctrl.panel.isLogScale ? Math[this.ctrl.panel.logFunction](dataPoint.value) : dataPoint.value)
+    let value = dataPoint.value;
+    if (this.ctrl.panel.isLogScale) {
+      value = Math.log(value);
+    }
+    return value
+  }
+
+  setSizes(data) {
+    const sizes = data.map(x => this.getValue(x));
+    this.lowestValue = Math.min(...sizes);
+    this.highestValue = Math.max(...sizes);
+    this.valueRange = this.highestValue - this.lowestValue;
   }
 
   filterEmptyAndZeroValues(data) {
@@ -141,10 +152,7 @@ export default class WorldMap {
 
   createCircles(data) {
     const circles: any[] = [];
-    const sizes = this.ctrl.data.map(x => this.getValue(x));
-    this.lowestValue = Math.min(...sizes);
-    this.highestValue = Math.max(...sizes);
-    this.valueRange = this.highestValue - this.lowestValue;
+    this.setSizes(data);
     data.forEach(dataPoint => {
       if (!dataPoint.locationName) {
         return;
@@ -156,10 +164,7 @@ export default class WorldMap {
   }
 
   updateCircles(data) {
-    const sizes = data.map(x => this.getValue(x));
-    this.lowestValue = Math.min(...sizes);
-    this.highestValue = Math.max(...sizes);
-    this.valueRange = this.highestValue - this.lowestValue;
+    this.setSizes(data);
     data.forEach(dataPoint => {
       if (!dataPoint.locationName) {
         return;
@@ -201,14 +206,14 @@ export default class WorldMap {
   }
 
   calcCircleSize(dataPointValue) {
-    let circleMinSize = parseInt(this.ctrl.panel.circleMinSize, 10) || 2;
+    const circleMinSize = parseInt(this.ctrl.panel.circleMinSize, 10) || 2;
     const circleMaxSize = parseInt(this.ctrl.panel.circleMaxSize, 10) || 30;
 
     if (this.valueRange === 0) {
       return circleMaxSize;
     }
 
-    let dataFactor = (dataPointValue - this.lowestValue) / this.valueRange;
+    const dataFactor = (dataPointValue - this.lowestValue) / this.valueRange;
     const circleSizeRange = circleMaxSize - circleMinSize;
 
     return circleSizeRange * dataFactor + circleMinSize;
