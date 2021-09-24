@@ -20,7 +20,6 @@ describe('Worldmap', () => {
     beforeEach(() => {
       ctrl.data = new DataBuilder()
         .withCountryAndValue('SE', 1)
-        .withDataRange(1, 1, 0)
         .build();
       ctrl.panel.circleMaxSize = '10';
       worldMap.drawCircles();
@@ -46,7 +45,6 @@ describe('Worldmap', () => {
       ctrl.data = new DataBuilder()
         .withCountryAndValue('SE', 1)
         .withCountryAndValue('IE', 2)
-        .withDataRange(1, 2, 1)
         .build();
       ctrl.panel.circleMinSize = '2';
       ctrl.panel.circleMaxSize = '10';
@@ -76,7 +74,6 @@ describe('Worldmap', () => {
       ctrl.data = new DataBuilder()
         .withCountryAndValue('SE', 1)
         .withCountryAndValue('IE', 2)
-        .withDataRange(1, 2, 1)
         .build();
       ctrl.panel.circleMinSize = '2';
       ctrl.panel.circleMaxSize = '10';
@@ -100,7 +97,6 @@ describe('Worldmap', () => {
         .withCountryAndValue('SE', 1)
         .withCountryAndValue('IE', 2)
         .withCountryAndValue('US', 3)
-        .withDataRange(1, 3, 2)
         .withThresholdValues([2])
         .build();
       ctrl.panel.circleMinSize = '2';
@@ -146,7 +142,6 @@ describe('Worldmap', () => {
         .withCountryAndValue('SE', 1)
         .withCountryAndValue('IE', 2)
         .withCountryAndValue('US', null)
-        .withDataRange(1, 3, 2)
         .withThresholdValues([2])
         .build();
       ctrl.panel.hideEmpty = true;
@@ -164,7 +159,6 @@ describe('Worldmap', () => {
         .withCountryAndValue('SE', 1)
         .withCountryAndValue('IE', 2)
         .withCountryAndValue('US', 0)
-        .withDataRange(1, 3, 2)
         .withThresholdValues([2])
         .build();
       ctrl.panel.hideZero = true;
@@ -185,7 +179,6 @@ describe('Worldmap', () => {
         .withCountryAndValue('SE', 1)
         .withCountryAndValue('IE', 2)
         .withCountryAndValue('US', 3)
-        .withDataRange(1, 3, 2)
         .withThresholdValues([2])
         .build();
 
@@ -195,7 +188,6 @@ describe('Worldmap', () => {
         .withCountryAndValue('SE', 3)
         .withCountryAndValue('IE', 2)
         .withCountryAndValue('US', 1)
-        .withDataRange(1, 3, 2)
         .withThresholdValues([2])
         .build();
 
@@ -227,7 +219,6 @@ describe('Worldmap', () => {
         .withCountryAndValue('SE', 1)
         .withCountryAndValue('IE', 2)
         .withCountryAndValue('US', 3)
-        .withDataRange(1, 3, 2)
         .withThresholdValues([2])
         .build();
 
@@ -235,7 +226,6 @@ describe('Worldmap', () => {
 
       ctrl.data = new DataBuilder()
         .withCountryAndValue('SE', 2)
-        .withDataRange(1, 1, 0)
         .withThresholdValues([2])
         .build();
 
@@ -322,7 +312,6 @@ describe('Worldmap', () => {
         .withCountryAndValue('SE', 1, highVal)
         .withCountryAndValue('IE', 2, avgVal)
         .withCountryAndValue('US', 1, lowVal)
-        .withDataRange(0, 100, 50)
         .withThresholdValues([33,66])
         .build();
       worldMap.drawCircles();
@@ -387,4 +376,51 @@ describe('Worldmap', () => {
     worldMap = new WorldMap(ctrl, document.getElementsByClassName('mapcontainer')[0]);
     worldMap.createMap();
   }
+
+  describe('when apply log is set', () => {
+    const LOW = 1;
+    const HIGH = 300000;
+    const MID = 100;
+
+    const minCircleSize = 1;
+    const maxCircleSize = 11;
+    const midCircleSize = 4.651553264913736;
+    
+
+    beforeEach(() => {
+      ctrl.data = new DataBuilder()
+        .withCountryAndValue('SE', LOW)
+        .withCountryAndValue('IE', MID)
+        .withCountryAndValue('US', HIGH)
+        .withThresholdValues([2])
+        .build();
+      ctrl.panel.circleMinSize = minCircleSize;
+      ctrl.panel.circleMaxSize = maxCircleSize;
+      ctrl.panel.isLogScale = true;
+      worldMap.drawCircles();
+    });
+
+    it('should draw three circles on the map', () => {
+      expect(worldMap.circles.length).toBe(3);
+    });
+
+    it('should create a circle with min circle size for smallest value size', () => {
+      expect(worldMap.circles[0].options.radius).toBe(minCircleSize);
+    });
+
+    // log is used to highlight the smaller parts when there's a big deviant
+    it('should create a circle with intermediary circle size for mid value size', () => {
+      expect(worldMap.circles[1].options.radius).toBe(midCircleSize);
+    });
+
+    it('should create a circle with max circle size for largest value size', () => {
+      expect(worldMap.circles[2].options.radius).toBe(maxCircleSize);
+    });
+
+    it('should create circle popups with the second metrics there', () => {
+      expect(worldMap.circles[0]._popup._content).toBe(`Sweden: ${LOW}`);
+      expect(worldMap.circles[1]._popup._content).toBe(`Ireland: ${MID}`);
+      expect(worldMap.circles[2]._popup._content).toBe(`United States: ${HIGH}`);
+    });
+  });
 });
