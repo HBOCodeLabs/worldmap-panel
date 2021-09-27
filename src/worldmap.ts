@@ -1,3 +1,4 @@
+import { DataPoint } from 'dataPoint';
 import * as _ from 'lodash';
 import * as L from './libs/leaflet';
 import WorldmapCtrl from './worldmap_ctrl';
@@ -106,16 +107,15 @@ export default class WorldMap {
 
   // Determines if the log scale is applied and chooses which value to use
   // Used when calculating circle sizes
-  getValue(dataPoint) {
-    let value = dataPoint.value;
+  getValue(value: number): number {
     if (this.ctrl.panel.isLogScale) {
       value = Math.log(value);
     }
     return value
   }
 
-  setSizes(data) {
-    const sizes = data.map(x => this.getValue(x));
+  setSizes(data: DataPoint[]) {
+    const sizes = data.map(dataPoint => this.getValue(dataPoint.value));
     this.lowestValue = Math.min(...sizes);
     this.highestValue = Math.max(...sizes);
     this.valueRange = this.highestValue - this.lowestValue;
@@ -177,7 +177,7 @@ export default class WorldMap {
       if (circle) {
         const colorValue = dataPoint.colorValue !== undefined ? dataPoint.colorValue : dataPoint.value;
         const color = this.getColor(colorValue);
-        circle.setRadius(this.calcCircleSize(this.getValue(dataPoint) || 0));
+        circle.setRadius(this.calcCircleSize(this.getValue(dataPoint.value) || 0));
         circle.setStyle({
           color,
           fillColor: color,
@@ -194,7 +194,7 @@ export default class WorldMap {
     const colorValue = dataPoint.colorValue !== undefined ? dataPoint.colorValue : dataPoint.value;
     const color = this.getColor(colorValue);
     const circle = (<any>window).L.circleMarker([dataPoint.locationLatitude, dataPoint.locationLongitude], {
-      radius: this.calcCircleSize(this.getValue(dataPoint) || 0),
+      radius: this.calcCircleSize(this.getValue(dataPoint.value) || 0),
       color,
       fillColor: color,
       fillOpacity: 0.5,

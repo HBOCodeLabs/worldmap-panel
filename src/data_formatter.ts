@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 import decodeGeoHash from './geohash';
 import kbn from 'grafana/app/core/utils/kbn';
+import { DataPoint } from 'dataPoint';
 
 export default class DataFormatter {
   constructor(private ctrl) {}
@@ -37,7 +38,7 @@ export default class DataFormatter {
     }
   }
 
-  createDataValue(encodedGeohash, decodedGeohash, locationName, value, colorValue) {
+  createDataValue(encodedGeohash, decodedGeohash, locationName, value, colorValue) : DataPoint {
     const dataValue = {
       colorValue: colorValue,
       key: encodedGeohash,
