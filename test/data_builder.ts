@@ -50,13 +50,6 @@ export default class DataBuilder {
     return this;
   }
 
-  withDataRange(lowest, highest, range) {
-    this.data.lowestValue = lowest;
-    this.data.highestValue = highest;
-    this.data.valueRange = range;
-    return this;
-  }
-
   build() {
     return this.data;
   }
