@@ -370,6 +370,7 @@ describe('Worldmap', () => {
         mapCenterLongitude: 0,
         initialZoom: 1,
         colors: ['red', 'blue', 'green'],
+        replaceVariables: (interpolation: string) => {}
       },
       tileServer: 'CartoDB Positron',
     };
