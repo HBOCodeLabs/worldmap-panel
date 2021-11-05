@@ -122,13 +122,13 @@ export default class WorldMap {
   }
 
   filterEmptyAndZeroValues(data) {
-    const minValue = this.ctrl.panel.minValue;
-    const maxValue = this.ctrl.panel.maxValue;
+    const minValue = this.ctrl.panel.minValue || parseInt(this.ctrl.panel.replaceVariables('$minDisplayValue'));
+    const maxValue = this.ctrl.panel.maxValue || parseInt(this.ctrl.panel.replaceVariables('$maxDisplayValue'));
     return _.filter(data, o => {
       return !(this.ctrl.panel.hideEmpty && _.isNil(o.value)) 
           && !(this.ctrl.panel.hideZero && o.value === 0)
-          && ([undefined, ''].includes(minValue) || o.value >= minValue)
-          && ([undefined, ''].includes(maxValue) || o.value <= maxValue)
+          && ([undefined, NaN, 0, ''].includes(minValue) || o.value >= minValue)
+          && ([undefined, NaN, ''].includes(maxValue) || o.value <= maxValue)
     });
   }
 
