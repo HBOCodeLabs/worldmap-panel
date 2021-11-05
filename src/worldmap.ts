@@ -127,6 +127,8 @@ export default class WorldMap {
     return _.filter(data, o => {
       return !(this.ctrl.panel.hideEmpty && _.isNil(o.value)) 
           && !(this.ctrl.panel.hideZero && o.value === 0)
+          // The result of parseInt in case of "No Limit" or any other numberless string will be a NaN. 
+          // In that case all "not numbers" should invalidate the filter and ignored.
           && ([undefined, NaN, 0, ''].includes(minValue) || o.value >= minValue)
           && ([undefined, NaN, ''].includes(maxValue) || o.value <= maxValue)
     });
