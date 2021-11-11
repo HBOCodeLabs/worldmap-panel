@@ -424,4 +424,52 @@ describe('Worldmap', () => {
       expect(worldMap.circles[2]._popup._content).toBe(`United States: ${HIGH}`);
     });
   });
+
+  describe('when variables have M or K', () => {
+    beforeEach(() => {
+      setupWorldmapFixture();
+    })
+
+    const getValidData = (): Array < [string, {
+      providedInput: string,
+      expectedOutput: string
+    }] > => {
+        return [
+            ['no shortcuts', {
+                providedInput: '1000',
+                expectedOutput: '1000'
+            }],
+            ['only text', {
+                providedInput: 'Something',
+                expectedOutput: 'Something'
+            }],
+            ['one K shortcut', {
+                providedInput: '1k',
+                expectedOutput: '1000'
+            }],
+            ['one m shortcut', {
+                providedInput: '1m',
+                expectedOutput: '1000000'
+            }],
+            ['uppercase shortcuts', {
+                providedInput: '1K',
+                expectedOutput: '1000'
+            }],
+            ['mixed shortcuts', {
+                providedInput: '1Km',
+                expectedOutput: '1000000000'
+            }],
+        ]
+    }
+
+    test.each(getValidData())(
+      'Should parse variables when it have %s', (record: { providedInput: string, expectedOutput: string }) : void => {
+        // Act
+        const actual = worldMap.replaceThousandsAndMillions(record.providedInput);
+
+        // Assert
+        expect(actual).toEqual(record.providedInput);
+      }
+    )
+  });
 });
