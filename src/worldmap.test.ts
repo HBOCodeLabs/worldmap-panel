@@ -424,4 +424,33 @@ describe('Worldmap', () => {
       expect(worldMap.circles[2]._popup._content).toBe(`United States: ${HIGH}`);
     });
   });
+
+  describe('when variables have M or K', () => {
+    beforeEach(() => {
+      setupWorldmapFixture();
+    })
+    it('shouldnt break if only numbers are added', () => {
+      const input = '1000';
+      const output = worldMap.replaceThousandsAndMillions(input);
+      expect(output).toEqual(input);
+    });
+    it('should replace K with 1000', () => {
+      const input = '1k';
+      const output = worldMap.replaceThousandsAndMillions(input);
+      expect(output).not.toEqual(input);
+      expect(output).toEqual('1000');
+    })
+    it('should replace M with 1000000', () => {
+      const input = '1m';
+      const output = worldMap.replaceThousandsAndMillions(input);
+      expect(output).not.toEqual(input);
+      expect(output).toEqual('1000000');
+    })
+    it('should replace Ks,Ms correctly', () => {
+      const input = '1km';
+      const output = worldMap.replaceThousandsAndMillions(input);
+      expect(output).not.toEqual(input);
+      expect(output).toEqual('1000000000');
+    })
+  });
 });
