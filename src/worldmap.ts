@@ -121,7 +121,7 @@ export default class WorldMap {
     this.valueRange = this.highestValue - this.lowestValue;
   }
 
-  replaceThousandsAndMillions(value) {
+  replaceThousandsAndMillions(value: string) : string {
     if (!value || !value.match(/\d+[k|m]+/gi)){
       return value
     }
@@ -132,7 +132,6 @@ export default class WorldMap {
   filterEmptyAndZeroValues(data) {
     const minValue = this.ctrl.panel.minValue || parseInt(this.replaceThousandsAndMillions(this.ctrl.panel.replaceVariables('$minDisplayValue')));
     const maxValue = this.ctrl.panel.maxValue || parseInt(this.replaceThousandsAndMillions(this.ctrl.panel.replaceVariables('$maxDisplayValue')));
-    console.log(minValue, maxValue);
     return _.filter(data, o => {
       return !(this.ctrl.panel.hideEmpty && _.isNil(o.value)) 
           && !(this.ctrl.panel.hideZero && o.value === 0)

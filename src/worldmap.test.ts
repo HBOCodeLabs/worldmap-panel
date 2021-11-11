@@ -429,28 +429,47 @@ describe('Worldmap', () => {
     beforeEach(() => {
       setupWorldmapFixture();
     })
-    it('shouldnt break if only numbers are added', () => {
-      const input = '1000';
-      const output = worldMap.replaceThousandsAndMillions(input);
-      expect(output).toEqual(input);
-    });
-    it('should replace K with 1000', () => {
-      const input = '1k';
-      const output = worldMap.replaceThousandsAndMillions(input);
-      expect(output).not.toEqual(input);
-      expect(output).toEqual('1000');
-    })
-    it('should replace M with 1000000', () => {
-      const input = '1m';
-      const output = worldMap.replaceThousandsAndMillions(input);
-      expect(output).not.toEqual(input);
-      expect(output).toEqual('1000000');
-    })
-    it('should replace Ks,Ms correctly', () => {
-      const input = '1km';
-      const output = worldMap.replaceThousandsAndMillions(input);
-      expect(output).not.toEqual(input);
-      expect(output).toEqual('1000000000');
-    })
+
+    const getValidData = (): Array < [string, {
+      providedInput: string,
+      expectedOutput: string
+    }] > => {
+        return [
+            ['no shortcuts', {
+                providedInput: '1000',
+                expectedOutput: '1000'
+            }],
+            ['only text', {
+                providedInput: 'Something',
+                expectedOutput: 'Something'
+            }],
+            ['one K shortcut', {
+                providedInput: '1k',
+                expectedOutput: '1000'
+            }],
+            ['one m shortcut', {
+                providedInput: '1m',
+                expectedOutput: '1000000'
+            }],
+            ['uppercase shortcuts', {
+                providedInput: '1K',
+                expectedOutput: '1000'
+            }],
+            ['mixed shortcuts', {
+                providedInput: '1Km',
+                expectedOutput: '1000000000'
+            }],
+        ]
+    }
+
+    test.each(getValidData())(
+      'Should parse variables when it have %s', (record: { providedInput: string, expectedOutput: string }) : void => {
+        // Act
+        const actual = worldMap.replaceThousandsAndMillions(record.providedInput);
+
+        // Assert
+        expect(actual).toEqual(record.providedInput);
+      }
+    )
   });
 });
